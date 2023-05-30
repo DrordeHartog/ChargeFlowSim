@@ -21,11 +21,13 @@ class Charge:
     def set_charge(self, q):
         self.q = q
 
-    def calculate_electric_field(self, other_charges: list):
+    def calculate_electric_field(self, charges: list):
         k = 8.9875517923 * 10**9  # Coulomb's constant
         total_field_x = 0
         total_field_y = 0
         total_field_z = 0
+        #remove our charge from calcs
+        other_charges = charges[:self.index-1] + charges[self.index+1:]
         for charge in other_charges:
             dx = charge.x - self.x
             dy = charge.y - self.y
@@ -53,6 +55,5 @@ class Charge:
         self.x += velocity[0] * time
         self.y += velocity[1] * time
         self.z += velocity[2] * time
-
 
 
