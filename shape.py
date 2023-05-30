@@ -1,10 +1,10 @@
 import helper_functions as hf
-import charge_lib
+import charge
 import math
 
 
 class Sphere:
-    def __init__(self, radius:float, dim:int, free_charge: list,
+    def __init__(self, radius: float, dim: int, free_charge=[],
                  center=(0, 0, 0)):
         self.center = center
         self.radius = radius
@@ -16,7 +16,7 @@ class Sphere:
             if not self.in_sphere(charge):
                 self.correct_position(charge)
 
-    def correct_position(self, charge: charge_lib.Charge):
+    def correct_position(self, charge: charge.Charge):
         pass
 
     def in_sphere(self, charge):
@@ -50,7 +50,7 @@ class Sphere:
                 y = self.radius * math.sin(theta) * math.sin(phi)
                 z = self.radius * math.cos(theta)
     
-                charge = PointCharge(x, y, z, charge_value, charge_mass)
+                charge = charge.Charge(x, y, z, charge_value, charge_mass)
                 charges.append(charge)
     
         # Distribute remaining charges in the last incomplete shell
@@ -61,7 +61,7 @@ class Sphere:
             y = self.radius * math.sin(theta) * math.sin(phi)
             z = self.radius * math.cos(theta)
     
-            charge = PointCharge(x, y, z, charge_value, charge_mass)
+            charge = charge.Charge(x, y, z, charge_value, charge_mass)
             charges.append(charge)
     
         self.charges = charges
