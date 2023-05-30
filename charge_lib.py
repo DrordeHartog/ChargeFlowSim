@@ -1,5 +1,5 @@
 class Charge:
-    def __init__(self, q: float, x:float, y:float, z:float, mass:float, index:int):
+    def __init__(self, q: float, mass:float, x:float, y:float, z:float , index:int):
         self.q = q
         self.m = mass
         self.x = x

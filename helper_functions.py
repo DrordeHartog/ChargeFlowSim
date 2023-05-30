@@ -5,10 +5,11 @@ import numpy as np
 
 
 def generate_random_theta_phi(dim: int):
-    if din == 2:
-        theta = random.uniform(0, 2 * math.pi)  # Generate random theta between 0 and 2pi
+    if dim == 2:
+        two_pi = 2*math.pi
+        theta = random.uniform(0, two_pi)  # Generate random theta between 0 and 2pi
         return theta
-    elif din == 3:
+    elif dim == 3:
         theta = random.uniform(0, math.pi)  # Generate random theta between 0 and pi
         phi = random.uniform(0, 2 * math.pi)  # Generate random phi between 0 and 2pi
         return theta, phi
@@ -33,7 +34,8 @@ def cartesian_to_spherical(x, y, z):
 def polar_to_cartesian(r, theta):
     x = r * math.cos(theta)
     y = r * math.sin(theta)
-    return x, y
+    z = 0
+    return x, y, z
 
 
 def get_random_velocity(v: float, dim: int):
