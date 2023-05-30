@@ -40,4 +40,3 @@ def generate_dataframe(n=200):
         'cycle': np.random.randint(low=1, high=100, size=num_rows),
         'timestamp': [datetime.datetime.now() + datetime.timedelta(days=i) for i in range(num_rows)]
     }
-
