@@ -49,7 +49,10 @@ class Charge:
         self.y += self.q*electric_field[1]*(time**2)/(2*self.m)
         self.z += self.q*electric_field[2]*(time**2)/(2*self.m)
 
-
+    def update_position(self, velocity, time):
+        self.x += velocity[0] * time
+        self.y += velocity[1] * time
+        self.z += velocity[2] * time
 
 
 
