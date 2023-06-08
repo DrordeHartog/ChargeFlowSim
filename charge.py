@@ -43,9 +43,12 @@ class Charge:
 #  remove our charge from calcs
         other_charges = charges[:self.index] + charges[self.index+1:]
         for charge in other_charges:
-            dx = charge.x - self.x
-            dy = charge.y - self.y
-            dz = charge.z - self.z
+            # dx = charge.x - self.x
+            # dy = charge.y - self.y
+            # dz = charge.z - self.z
+            dx = self.x - charge.x
+            dy = self.y - charge.y
+            dz = self.z - charge.z
 
             r_squared = dx**2 + dy**2 + dz**2
             r_cubed = r_squared**(3/2)

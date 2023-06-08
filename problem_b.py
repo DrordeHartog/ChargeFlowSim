@@ -10,7 +10,7 @@ import shape
 sphere = shape.Sphere(1, 3, [])
 n = 200
 time_tao = 10**(-3)  # s
-sphere.distribute_charges(n, -e, electron_mass)
+sphere.distribute_charges_3d(n, -e, electron_mass)
 # df = hf.generate_dataframe(sphere.distribution)
 for i in range(100):
     for charge in sphere.charges:

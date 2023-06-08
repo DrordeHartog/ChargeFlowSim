@@ -9,10 +9,10 @@ import shape
 
 sphere = shape.Sphere(1, 2, [])
 n = 200
-tao = 10**(-2.5)  # s
+tao = 10**(-3)  # s
 sphere.distribute_charges_2d(n, -e, electron_mass)
 # df = hf.generate_dataframe(sphere.distribution)
-for i in range(500):
+for i in range(100):
     # O(n^2)
     for charge in sphere.charges:
         charge.calculate_electric_field(sphere.charges, [0, 0, 0])
