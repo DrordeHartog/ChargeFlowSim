@@ -1,5 +1,7 @@
 from scipy.constants import e
 from scipy.constants import electron_mass
+import helper_functions as hf
+
 
 class Charge:
     def __init__(self, x: float, y: float, z: float, index: int, q: float = e,
@@ -31,14 +33,13 @@ class Charge:
     def set_mass(self, m):
         self.m = m
 
-
     def calculate_electric_field(self, charges: list, external_field):
         k = 8.9875517923 * 10**9  # Coulomb's constant
         self.efx = external_field[0]
         self.efy = external_field[1]
         self.efz = external_field[2]
 
-#remove our charge from calcs
+#  remove our charge from calcs
         other_charges = charges[:self.index-1] + charges[self.index+1:]
         for charge in other_charges:
             dx = charge.x - self.x
@@ -57,16 +58,32 @@ class Charge:
             self.efz += field_z
         return self.efx, self.efy, self.efz
 
+    # move under effect of external field
     def update_motion(self, time):
         self.x += self.q*self.efx*(time**2)/(2*self.m)
         self.y += self.q*self.efy*(time**2)/(2*self.m)
         self.z += self.q*self.efz*(time**2)/(2*self.m)
+    #
+    # def get_prev_postion(self, time):
+    #     x = self.x - self.q*(-self.efx)*(time**2)/(2*self.m)
+    #     y = self.y - self.q*(-self.efy)*(time**2)/(2*self.m)
+    #     z = self.z - self.q*(-self.efz)*(time**2)/(2*self.m)
+    #     return x, y, z
+    #
+    # def get_edge_pos(self, prev_pos):
+    #
 
+    # move under effect of drude collision velocity
     def update_position(self, velocity, time):
         self.x += velocity[0] * time
         self.y += velocity[1] * time
         self.z += velocity[2] * time
 
+    def correct_radius_to_one(self, radius):
+        r, theta, phi = hf.cartesian_to_spherical(self.x, self.y, self.z)
+        r = radius
+        x, y, z = hf.spherical_to_cartesian(r, theta, phi)
+        self.set_position(x, y, z)
 
     def __str__(self):
         return f"Point charge at ({self.x}, {self.y}, {self.z}) with charge" \
