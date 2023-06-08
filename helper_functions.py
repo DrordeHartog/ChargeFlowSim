@@ -127,6 +127,7 @@ def generate_points_in_square(num_points):
     return positions
 
 
+
 # Example usage
 din = 3
 shape = 'sphere'
