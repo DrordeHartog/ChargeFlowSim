@@ -5,6 +5,8 @@ from mpl_toolkits import mplot3d
 import matplotlib.pyplot as plt
 from matplotlib import cm
 import random
+from mpl_toolkits.mplot3d import Axes3D
+
 
 def generate_random_theta_phi(dim: int):
     if dim == 2:
@@ -151,3 +153,30 @@ def plot_charge_path(df, dim=3):
     z = df['z_pos'].to_numpy()
 
     ax.plot(x, y, zs=z, zdir=z, label = 'charge path')
+
+def plot_charges_location(df, dim=3):
+    ax = plt.figure().add_subplot(projection = str(dim) + 'd')
+    x = df['x_pos'].to_numpy()
+    y = df['y_pos'].to_numpy()
+    z = df['z_pos'].to_numpy()
+
+    ax.scatter(x, y, zs=z)
+
+def plot_shape(dim = 3, shape = 'sphere', radius = 1):
+    ax = plt.figure().add_subplot(projection=str(dim) + 'd')
+    # Define the sphere properties
+    radius = 1
+    center = (0, 0, 0)
+    u = np.linspace(0, 2 * np.pi, 100)
+    v = np.linspace(0, np.pi, 100)
+    x_sphere = center[0] + radius * np.outer(np.cos(u), np.sin(v))
+    y_sphere = center[1] + radius * np.outer(np.sin(u), np.sin(v))
+    z_sphere = center[2] + radius * np.outer(np.ones(np.size(u)), np.cos(v))
+
+    # Plot the translucent sphere
+    ax.plot_surface(x_sphere, y_sphere, z_sphere, color='b', alpha=0.3)
+    # Set aspect ratio
+    ax.set_box_aspect([1, 1, 1])
+
+
+
