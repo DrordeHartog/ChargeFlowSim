@@ -1,8 +1,10 @@
-import random
 import math
 import pandas as pd
 import numpy as np
-
+from mpl_toolkits import mplot3d
+import matplotlib.pyplot as plt
+from matplotlib import cm
+import random
 
 def generate_random_theta_phi(dim: int):
     if dim == 2:
@@ -47,17 +49,31 @@ def get_random_velocity(v: float, dim: int):
         return spherical_to_cartesian(v, theta, phi)
 
 
-def generate_dataframe(n: int = 200):
+def generate_dataframe(distribution, n: int = 200):
 
-    data = {
-        'id': range(1, n + 1),
-        'x_pos': np.random.uniform(low=-10, high=10, size=num_rows),
-        'y_pos': np.random.uniform(low=-10, high=10, size=num_rows),
-        'z_pos': np.random.uniform(low=-10, high=10, size=num_rows),
-        'effective_field_direction': None,
-        'cycle': np.random.randint(low=1, high=100, size=num_rows),
-        'timestamp': [datetime.datetime.now() + datetime.timedelta(days=i) for i in range(num_rows)]
-    }
+    df = pd.DataFrame(
+        {
+            'id': range(1, n + 1),
+            'x_pos': [distribution[i][0] for i in range(n)],
+            'y_pos': [distribution[i][1] for i in range(n)],
+            'z_pos': [distribution[i][2] for i in range(n)],
+            'effective_field_direction': None,
+            'cycle': [0 for _ in range (n)],
+        }
+    )
+    return df
+
+def update_dataframe(df, charges):
+
+    for charge in charges:
+        df.loc[len(df)] = {
+                'id': charge.index,
+                'x_pos': charge.x,
+                'y_pos': charge.y,
+                'z_pos': charge.z,
+                'effective_field_direction': (charge.efx, charge.efy, charge.efz),
+                'cycle': df['cycle'].max()+1
+            }
 
 
 def generate_evenly_distributed_positions(din, shape, num_electrons, radius=1.0):
@@ -127,12 +143,11 @@ def generate_points_in_square(num_points):
     return positions
 
 
+def plot_charge_path(df, dim=3):
 
-# Example usage
-din = 3
-shape = 'sphere'
-num_electrons = 10
-radius = 1.0
+    ax = plt.figure().add_subplot(projection = str(dim) + 'd')
+    x = df['x_pos'].to_numpy()
+    y = df['y_pos'].to_numpy()
+    z = df['z_pos'].to_numpy()
 
-positions = generate_evenly_distributed_positions(din, shape, num_electrons, radius)
-print(positions)
+    ax.plot(x, y, zs=z, zdir=z, label = 'charge path')
