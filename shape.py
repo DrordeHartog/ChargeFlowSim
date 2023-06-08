@@ -1,10 +1,11 @@
 import helper_functions as hf
-import charge
+import charge as ch
 import math
+import types
 
 
 class Sphere:
-    def __init__(self, radius: float, dim: int, free_charge=[],
+    def __init__(self, radius: float, dim: int, free_charge: list,
                  center=(0, 0, 0)):
         self.center = center
         self.radius = radius
@@ -16,8 +17,9 @@ class Sphere:
             if not self.in_sphere(charge):
                 self.correct_position(charge)
 
-    def correct_position(self, charge: charge.Charge):
-        pass
+    def correct_position(self, charge: ch.Charge):
+        # correct location
+        charge.corect_radius_to_one(self.radius)
 
     def in_sphere(self, charge):
         if self.radius >= math.sqrt(charge.x**2 + charge.y**2 + charge.y**2):
@@ -46,23 +48,24 @@ class Sphere:
     
             for j in range(num_phi):
                 phi = j * phi_spacing
-                x = self.radius * math.sin(theta) * math.cos(phi)
-                y = self.radius * math.sin(theta) * math.sin(phi)
-                z = self.radius * math.cos(theta)
-    
-                charge = charge.Charge(x, y, z, charge_value, charge_mass)
-                charges.append(charge)
+                self.distribute_charge_in_shell(theta, phi, j, charges,
+                                                charge_value, charge_mass)
     
         # Distribute remaining charges in the last incomplete shell
         for i in range(remaining_charges):
             theta = (num_shells + 0.5) * theta_spacing
             phi = i * phi_spacing
-            x = self.radius * math.sin(theta) * math.cos(phi)
-            y = self.radius * math.sin(theta) * math.sin(phi)
-            z = self.radius * math.cos(theta)
-    
-            charge = charge.Charge(x, y, z, charge_value, charge_mass)
-            charges.append(charge)
+            self.distribute_charge_in_shell(theta, phi, i, charges, charge_value,
+                                            charge_mass)
     
         self.charges = charges
         return
+
+    def distribute_charge_in_shell(self, theta, phi, index, charges: list,
+                                   charge_value, charge_mass):
+        x = self.radius * math.sin(theta) * math.cos(phi)
+        y = self.radius * math.sin(theta) * math.sin(phi)
+        z = self.radius * math.cos(theta)
+
+        cur_charge = ch.Charge(x, y, z, index, charge_value, charge_mass)
+        charges.append(cur_charge)
