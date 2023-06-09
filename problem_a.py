@@ -13,7 +13,7 @@ electric_field = [30, 0, 0]  # V/m
 time_tao = 10**(-15)  # s
 v = 0.002  # m/s
 dim = 2
-charge = ch.Charge(0, 0, 0, 0, e, electron_mass)
+charge = ch.Charge(0, 0, 0, 0, -e, electron_mass)
 
 initial_position = (0, 0, 0)
 data = hf.generate_dataframe([initial_position], 1)

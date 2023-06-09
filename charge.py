@@ -1,10 +1,11 @@
 from scipy.constants import e
 from scipy.constants import electron_mass
 import helper_functions as hf
+import math
 
 
 class Charge:
-    def __init__(self, x: float, y: float, z: float, index: int, q: float = e,
+    def __init__(self, x: float, y: float, z: float, index: int, q: float = -e,
                  mass: float = electron_mass):
         self.q = q
         self.m = mass
@@ -40,11 +41,14 @@ class Charge:
         self.efz = external_field[2]
 
 #  remove our charge from calcs
-        other_charges = charges[:self.index-1] + charges[self.index+1:]
+        other_charges = charges[:self.index] + charges[self.index+1:]
         for charge in other_charges:
-            dx = charge.x - self.x
-            dy = charge.y - self.y
-            dz = charge.z - self.z
+            # dx = charge.x - self.x
+            # dy = charge.y - self.y
+            # dz = charge.z - self.z
+            dx = self.x - charge.x
+            dy = self.y - charge.y
+            dz = self.z - charge.z
 
             r_squared = dx**2 + dy**2 + dz**2
             r_cubed = r_squared**(3/2)
@@ -79,12 +83,19 @@ class Charge:
         self.y += velocity[1] * time
         self.z += velocity[2] * time
 
-    def correct_radius_to_one(self, radius):
-        r, theta, phi = hf.cartesian_to_spherical(self.x, self.y, self.z)
-        r = radius
-        x, y, z = hf.spherical_to_cartesian(r, theta, phi)
+    def correct_r_to_radius(self, radius, dim):
+        if dim == 3:
+            r, theta, phi = hf.cartesian_to_spherical(self.x, self.y, self.z)
+            r = radius
+            x, y, z = hf.spherical_to_cartesian(r, theta, phi)
+        elif dim == 2:
+            r, theta = hf.cartesian_to_polar(self.x, self.y)
+            r = radius
+            x, y, z = hf.polar_to_cartesian(r, theta)
         self.set_position(x, y, z)
 
     def __str__(self):
-        return f"Point charge at ({self.x}, {self.y}, {self.z}) with charge" \
+        return f"Point charge {self.index} with radius" \
+               f" {hf.cartesian_to_spherical(self.x, self.y, self.z)[0]} " \
+               f"at ({self.x}, {self.y}, {self.z}) with charge" \
                f" {self.q} and mass {self.m}"
