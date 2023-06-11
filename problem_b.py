@@ -16,7 +16,7 @@ sphere.distribute_charges(n, -e, electron_mass)
 # df = hf.generate_dataframe(sphere.distribution)
 
 # run simulation
-for i in range(200):
+for i in range(900):
     for charge in sphere.charges:
         charge.calculate_electric_field(sphere.charges)
     for charge in sphere.charges:

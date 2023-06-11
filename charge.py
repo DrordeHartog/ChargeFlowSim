@@ -107,4 +107,4 @@ class Charge:
                                                          self.z)[0], 3)
         return f"Point charge {self.index} at radius {radius_rounded} from" \
                f" the center at point ({x_rounded}, {y_rounded}, {z_rounded})"\
-               f" with charge {self.q} and mass {self.m}"
+               f" with charge {self.q} coulomb and mass {self.m} kg"
