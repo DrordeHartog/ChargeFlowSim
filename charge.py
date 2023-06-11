@@ -17,6 +17,7 @@ class Charge:
         self.efz = 0
         self.index = index
 
+#getters and setters
     def get_position(self):
         return self.x, self.y, self.z
 
@@ -34,18 +35,23 @@ class Charge:
     def set_mass(self, m):
         self.m = m
 
-    def calculate_electric_field(self, charges: list, external_field):
+    def calculate_electric_field(self, charges: list, external_field=(0, 0, 0)):
+        ''' Calculate the electric field on a charge from all charges in the
+         system and an external electric field..
+         :param charges = list of charges of class Charge
+         :param external_field = external electric field, default value 0 '''
         k = 8.9875517923 * 10**9  # Coulomb's constant
         self.efx = external_field[0]
         self.efy = external_field[1]
         self.efz = external_field[2]
 
-#  remove our charge from calcs
-        other_charges = charges[:self.index] + charges[self.index+1:]
+        #  remove our charge from calculations
+        if charges[self.index].index == self.index:
+            other_charges = charges[:self.index] + charges[self.index+1:]
+        else:
+            other_charges = charges
+        # use superposition and sum up field contributions
         for charge in other_charges:
-            # dx = charge.x - self.x
-            # dy = charge.y - self.y
-            # dz = charge.z - self.z
             dx = self.x - charge.x
             dy = self.y - charge.y
             dz = self.z - charge.z
@@ -63,27 +69,26 @@ class Charge:
         return self.efx, self.efy, self.efz
 
     # move under effect of external field
-    def update_motion(self, time):
-        self.x += self.q*self.efx*(time**2)/(2*self.m)
-        self.y += self.q*self.efy*(time**2)/(2*self.m)
-        self.z += self.q*self.efz*(time**2)/(2*self.m)
-    #
-    # def get_prev_postion(self, time):
-    #     x = self.x - self.q*(-self.efx)*(time**2)/(2*self.m)
-    #     y = self.y - self.q*(-self.efy)*(time**2)/(2*self.m)
-    #     z = self.z - self.q*(-self.efz)*(time**2)/(2*self.m)
-    #     return x, y, z
-    #
-    # def get_edge_pos(self, prev_pos):
-    #
+    def update_motion(self, tao):
+        ''' Using equations of mechanics, this function calculates the movement
+        of a charge under the effect of its given electric field int a time
+        increment of tao.'''
+        self.x += self.q*self.efx*(tao**2)/(2*self.m)
+        self.y += self.q*self.efy*(tao**2)/(2*self.m)
+        self.z += self.q*self.efz*(tao**2)/(2*self.m)
 
-    # move under effect of drude collision velocity
-    def update_position(self, velocity, time):
-        self.x += velocity[0] * time
-        self.y += velocity[1] * time
-        self.z += velocity[2] * time
+    def update_position(self, velocity, tao):
+        ''' Move under effect of drude collision velocity '''
+
+        self.x += velocity[0] * tao
+        self.y += velocity[1] * tao
+        self.z += velocity[2] * tao
 
     def correct_r_to_radius(self, radius, dim):
+        '''Returns a charge back into a circular shape in the radial direction.
+         this fuction assumes the center of the shape to be (0,0,0).
+        :param radius = radius of shape
+        :param dim = number of dimensions of shape.'''
         if dim == 3:
             r, theta, phi = hf.cartesian_to_spherical(self.x, self.y, self.z)
             r = radius
@@ -95,7 +100,13 @@ class Charge:
         self.set_position(x, y, z)
 
     def __str__(self):
-        return f"Point charge {self.index} with radius" \
-               f" {hf.cartesian_to_spherical(self.x, self.y, self.z)[0]} " \
-               f"at ({self.x}, {self.y}, {self.z}) with charge" \
-               f" {self.q} and mass {self.m}"
+        x_rounded = round(self.x, 3)
+        y_rounded = round(self.y, 3)
+        z_rounded = round(self.z, 3)
+        q_rounded = round(self.q, 3)
+        m_rounded = round(self.m, 3)
+        radius_rounded = round(hf.cartesian_to_spherical(self.x, self.y,
+                                                         self.z)[0], 3)
+        return f"Point charge {self.index} at radius {radius_rounded} from" \
+               f" the center at point ({x_rounded}, {y_rounded}, {z_rounded})"\
+               f" with charge {q_rounded} and mass {m_rounded}"

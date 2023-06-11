@@ -14,11 +14,11 @@ time_tao = 10**(-15)  # s
 v = 0.002  # m/s
 dim = 2
 charge = ch.Charge(0, 0, 0, 0, -e, electron_mass)
-
+charges = [charge]
 initial_position = (0, 0, 0)
 data = hf.generate_dataframe([initial_position], 1)
 for i in range(100):
-    charge.calculate_electric_field([], electric_field)
+    charge.calculate_electric_field(charges, electric_field)
     charge.update_motion(time_tao)
     velocity_vec = hf.get_random_velocity(v, dim)
     charge.update_position(velocity_vec, time_tao)

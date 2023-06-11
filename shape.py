@@ -26,84 +26,51 @@ class Sphere:
             if not self.in_sphere(charge):
                 charge.correct_r_to_radius(self.radius, self.dim)
 
-    # def correct_position(self, charge: ch.Charge):
-    #     # correct location
-    #     charge.correct_r_to_radius(self.radius, self.dim)
-
     def in_sphere(self, charge):
         if self.radius >= math.sqrt(charge.x**2 + charge.y**2 + charge.z**2):
             return True
         else:
             return False
 
-    def distribute_charges_2d(self, n, q, m):
-
-        radius = self.radius  # Radius of the circle
-
-        # Generate points within a square
-        side_length = int(np.ceil(np.sqrt(n)))  # Convert to integer
-        x = np.linspace(-radius, radius, side_length)
-        y = np.linspace(-radius, radius, side_length)
-        x_grid, y_grid = np.meshgrid(x, y)
-
-        # Keep points within the circle
-        mask = np.sqrt(x_grid**2 + y_grid**2) <= radius
-        selected_points = np.column_stack((x_grid[mask], y_grid[mask]))
-
-        if selected_points.shape[0] < n:
-            # Reset the circle with a denser set of points
-            point_cloud = []
-            while len(point_cloud) < n:
-                theta = 2 * np.pi * np.random.rand()
-                r = radius * np.sqrt(np.random.rand())
-                x = r * np.cos(theta)
-                y = r * np.sin(theta)
-                point_cloud.append([x, y])
-            point_cloud = np.array(point_cloud)
-        else:
-            # Randomly sample n points from the selected points
-            indices = np.random.choice(selected_points.shape[0], n, replace=False)
-            point_cloud = selected_points[indices]
-
-        charges = []
-        for i, (x, y) in enumerate(point_cloud):
-            charges.append(ch.Charge(x, y, 0, i, q, m))  # Z-coordinate is 0 for 2D
-
-        self.charges = charges
-        self.distribution = point_cloud
-        self.project_distribution_2d()
-
-    def distribute_charges_3d(self, n, q, m):
-        dim_len = int((n * 3)**(1 / 3))  # Adjusting dim_len based on n
-        spacing = 2 / dim_len  # Spacing between points
-        point_cloud = np.mgrid[-1:1:spacing, -1:1:spacing, -1:1:spacing]\
-            .reshape(3, -1).T
-
-        point_radius = np.linalg.norm(point_cloud, axis=1)  # Calculate the
-        # distance from the origin for each point
-        in_points = point_radius < self.radius  # Boolean array indicating
-        # if the point is inside the sphere
-
-        selected_points = point_cloud[in_points][:n]  # Selecting n points
-        # within the sphere
+    def distribute_charges(self, n, q, m, dim):
         charges = []
         counter = 0
-        if self.dim == 3:
-            for x, y, z in selected_points:
-                charges.append(ch.Charge(x, y, z, counter, q, m))
-                counter += 1
-        self.charges = charges
-        self.distribution = selected_points
-        self.project_distribution()
+        selected_points = []
 
-    def reset_distribution(self):
+        while len(charges) < n:
+            point_cloud = np.random.uniform(-1, 1, size=(n, dim))
+            point_radius = np.linalg.norm(point_cloud, axis=1)
+            in_points = point_radius < self.radius
+            new_points = point_cloud[in_points]
+
+            if dim == 3:
+                for i in range(min(n - len(charges), len(new_points))):
+                    x, y, z = new_points[i]
+                    charges.append(ch.Charge(x, y, z, counter, q, m))
+                    counter += 1
+                    selected_points.append([x, y, z])
+            if dim == 2:
+                for i in range(min(n - len(charges), len(new_points))):
+                    x, y = new_points[i]
+                    charges.append(ch.Charge(x, y, 0, counter, q, m))
+                    counter += 1
+                    selected_points.append([x, y, 0])
+
+        self.charges = charges
+        self.distribution = np.array(selected_points)
+        if dim == 3:
+            self.project_distribution_3d()
+        if dim == 2:
+            self.project_distribution_2d()
+
+    def recalc_distribution(self):
         for i in range(len(self.charges)):
             self.distribution[i][0] = self.charges[i].x
             self.distribution[i][1] = self.charges[i].y
             if self.dim == 3:
                 self.distribution[i][2] = self.charges[i].z
 
-    def project_distribution(self):
+    def project_distribution_3d(self):
         fig = plt.figure()
         ax = fig.add_subplot(111, projection='3d')
 
@@ -112,8 +79,7 @@ class Sphere:
         v = np.linspace(0, np.pi, 100)
         x = self.radius * np.outer(np.cos(u), np.sin(v))
         y = self.radius * np.outer(np.sin(u), np.sin(v))
-        if self.dim == 3:
-            z = self.radius * np.outer(np.ones(np.size(u)), np.cos(v))
+        z = self.radius * np.outer(np.ones(np.size(u)), np.cos(v))
         ax.plot_surface(x, y, z, color='gray', alpha=0.2)
 
         # Plot the charge distribution
@@ -157,7 +123,10 @@ class Sphere:
 
         plt.show()
 
-
+    def print_charges_inside_volume(self):
+        for charge in self.charges:
+            if hf.cartesian_to_spherical(charge.x, charge.y, charge.z)[0] < 0.9:
+                print(charge)
 
 
 
