@@ -103,10 +103,8 @@ class Charge:
         x_rounded = round(self.x, 3)
         y_rounded = round(self.y, 3)
         z_rounded = round(self.z, 3)
-        q_rounded = round(self.q, 3)
-        m_rounded = round(self.m, 3)
         radius_rounded = round(hf.cartesian_to_spherical(self.x, self.y,
                                                          self.z)[0], 3)
         return f"Point charge {self.index} at radius {radius_rounded} from" \
                f" the center at point ({x_rounded}, {y_rounded}, {z_rounded})"\
-               f" with charge {q_rounded} and mass {m_rounded}"
+               f" with charge {self.q} and mass {self.m}"

@@ -8,7 +8,7 @@ import shape
 
 c = pd.DataFrame()
 
-
+#initialize variables
 electric_field = [30, 0, 0]  # V/m
 time_tao = 10**(-15)  # s
 v = 0.002  # m/s
@@ -17,6 +17,8 @@ charge = ch.Charge(0, 0, 0, 0, -e, electron_mass)
 charges = [charge]
 initial_position = (0, 0, 0)
 data = hf.generate_dataframe([initial_position], 1)
+
+#run simulation
 for i in range(100):
     charge.calculate_electric_field(charges, electric_field)
     charge.update_motion(time_tao)

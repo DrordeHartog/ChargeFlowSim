@@ -21,7 +21,7 @@ class Sphere:
         self.dim = dim
         self.distribution = []
 
-    def check_charges_in_sphere(self):
+    def return_charges_to_sphere(self):
         for charge in self.charges:
             if not self.in_sphere(charge):
                 charge.correct_r_to_radius(self.radius, self.dim)
