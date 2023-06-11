@@ -8,14 +8,14 @@ import helper_functions as hf
 import shape
 
 
-#intialize variables
+# intialize variables
 sphere = shape.Sphere(1, 2, [])
 n = 200
 tao = 10**(-3)  # s
-sphere.distribute_charges(n, -e, electron_mass, 2)
+sphere.distribute_charges(n, -e, electron_mass)
 # df = hf.generate_dataframe(sphere.distribution)
 
-#run simulation
+# run simulation
 for i in range(200):
     for charge in sphere.charges:
         charge.calculate_electric_field(sphere.charges)
@@ -23,5 +23,4 @@ for i in range(200):
         charge.update_motion(tao)
     sphere.return_charges_to_sphere()
 
-sphere.recalc_distribution()
 sphere.project_distribution_2d()

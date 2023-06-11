@@ -17,7 +17,7 @@ class Charge:
         self.efz = 0
         self.index = index
 
-#getters and setters
+# getters and setters
     def get_position(self):
         return self.x, self.y, self.z
 
@@ -36,10 +36,10 @@ class Charge:
         self.m = m
 
     def calculate_electric_field(self, charges: list, external_field=(0, 0, 0)):
-        ''' Calculate the electric field on a charge from all charges in the
+        """ Calculate the electric field on a charge from all charges in the
          system and an external electric field..
          :param charges = list of charges of class Charge
-         :param external_field = external electric field, default value 0 '''
+         :param external_field = external electric field, default value 0 """
         k = 8.9875517923 * 10**9  # Coulomb's constant
         self.efx = external_field[0]
         self.efy = external_field[1]
@@ -70,25 +70,25 @@ class Charge:
 
     # move under effect of external field
     def update_motion(self, tao):
-        ''' Using equations of mechanics, this function calculates the movement
+        """ Using equations of mechanics, this function calculates the movement
         of a charge under the effect of its given electric field int a time
-        increment of tao.'''
+        increment of tao."""
         self.x += self.q*self.efx*(tao**2)/(2*self.m)
         self.y += self.q*self.efy*(tao**2)/(2*self.m)
         self.z += self.q*self.efz*(tao**2)/(2*self.m)
 
     def update_position(self, velocity, tao):
-        ''' Move under effect of drude collision velocity '''
+        """ Move under effect of drude collision velocity """
 
         self.x += velocity[0] * tao
         self.y += velocity[1] * tao
         self.z += velocity[2] * tao
 
     def correct_r_to_radius(self, radius, dim):
-        '''Returns a charge back into a circular shape in the radial direction.
+        """Returns a charge back into a circular shape in the radial direction.
          this fuction assumes the center of the shape to be (0,0,0).
         :param radius = radius of shape
-        :param dim = number of dimensions of shape.'''
+        :param dim = number of dimensions of shape."""
         if dim == 3:
             r, theta, phi = hf.cartesian_to_spherical(self.x, self.y, self.z)
             r = radius

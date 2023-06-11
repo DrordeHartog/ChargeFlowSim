@@ -10,8 +10,6 @@ from mpl_toolkits.mplot3d import axes3d
 import matplotlib.animation as animation
 
 
-
-
 class Sphere:
     def __init__(self, radius: float, dim: int, free_charge: list,
                  center=(0, 0, 0)):
@@ -22,34 +20,32 @@ class Sphere:
         self.distribution = []
 
     def return_charges_to_sphere(self):
+        """ Checks all that all charges are within sphere. if not calls
+        charge method to return to sphere"""
         for charge in self.charges:
-            if not self.in_sphere(charge):
+            if self.radius < math.sqrt(charge.x**2 + charge.y**2 + charge.z**2):
                 charge.correct_r_to_radius(self.radius, self.dim)
 
-    def in_sphere(self, charge):
-        if self.radius >= math.sqrt(charge.x**2 + charge.y**2 + charge.z**2):
-            return True
-        else:
-            return False
-
-    def distribute_charges(self, n, q, m, dim):
+    def distribute_charges(self, n, q, m):
+        """" distributes n charges of mass m and charge q within itself
+        randomly and uniformly. whem done, displays final plot"""
         charges = []
         counter = 0
         selected_points = []
 
         while len(charges) < n:
-            point_cloud = np.random.uniform(-1, 1, size=(n, dim))
+            point_cloud = np.random.uniform(-1, 1, size=(n, self.dim))
             point_radius = np.linalg.norm(point_cloud, axis=1)
             in_points = point_radius < self.radius
             new_points = point_cloud[in_points]
 
-            if dim == 3:
+            if self.dim == 3:
                 for i in range(min(n - len(charges), len(new_points))):
                     x, y, z = new_points[i]
                     charges.append(ch.Charge(x, y, z, counter, q, m))
                     counter += 1
                     selected_points.append([x, y, z])
-            if dim == 2:
+            if self.dim == 2:
                 for i in range(min(n - len(charges), len(new_points))):
                     x, y = new_points[i]
                     charges.append(ch.Charge(x, y, 0, counter, q, m))
@@ -58,12 +54,13 @@ class Sphere:
 
         self.charges = charges
         self.distribution = np.array(selected_points)
-        if dim == 3:
+        if self.dim == 3:
             self.project_distribution_3d()
-        if dim == 2:
+        if self.dim == 2:
             self.project_distribution_2d()
 
     def recalc_distribution(self):
+        """" recalculates distribution nparray locations"""
         for i in range(len(self.charges)):
             self.distribution[i][0] = self.charges[i].x
             self.distribution[i][1] = self.charges[i].y
@@ -71,6 +68,8 @@ class Sphere:
                 self.distribution[i][2] = self.charges[i].z
 
     def project_distribution_3d(self):
+        """"plots and displays points inside a 3d sphere"""
+        self.recalc_distribution()
         fig = plt.figure()
         ax = fig.add_subplot(111, projection='3d')
 
@@ -101,6 +100,7 @@ class Sphere:
 
 
     def project_distribution_2d(self):
+        """"plots and displays points charges in a 2d circle"""
         # Plot the shape (e.g., a circle)
         fig, ax = plt.subplots()
         shape = plt.Circle((0, 0), self.radius, color='gray', fill=False)
@@ -124,8 +124,11 @@ class Sphere:
         plt.show()
 
     def print_charges_inside_volume(self):
+        """"iterates over all charges in charge list and prints charges that
+         are not on the shell of shape"""
         for charge in self.charges:
-            if hf.cartesian_to_spherical(charge.x, charge.y, charge.z)[0] < 0.9:
+            if hf.cartesian_to_spherical(charge.x, charge.y, charge.z)[0] \
+                    < 0.99:
                 print(charge)
 
 
