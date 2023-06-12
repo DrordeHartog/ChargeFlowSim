@@ -2,10 +2,12 @@ import math
 import pandas as pd
 import numpy as np
 from mpl_toolkits import mplot3d
-import matplotlib.pyplot as plt
 from matplotlib import cm
+from matplotlib import pyplot as plt, colors, ticker as tk
 import random
 from mpl_toolkits.mplot3d import Axes3D
+import random
+import seaborn as sns
 
 
 def generate_random_theta_phi(dim: int):
@@ -63,19 +65,19 @@ def get_random_velocity(v: float, dim: int):
         return spherical_to_cartesian(v, theta, phi)
 
 
-def generate_dataframe(distribution, n: int = 200):
-
+def generate_dataframe(distribution):
+    n = len(distribution)
     df = pd.DataFrame(
         {
             'id': range(1, n + 1),
             'x_pos': [distribution[i][0] for i in range(n)],
             'y_pos': [distribution[i][1] for i in range(n)],
             'z_pos': [distribution[i][2] for i in range(n)],
-            'effective_field_direction': None,
-            'cycle': [0 for _ in range (n)],
+            'cycle': [0 for _ in range(n)],
         }
     )
     return df
+
 
 def update_dataframe(df, charges):
 
@@ -89,6 +91,36 @@ def update_dataframe(df, charges):
                 'cycle': df['cycle'].max()+1
             }
 
+
+def create_paths_graph(paths):
+    # Create a figure and axes using Seaborn
+    fig, ax = plt.subplots()
+    labels = paths.keys()
+    # Plot the lines
+    for speed in paths:
+        df = paths[speed]
+        x = df['x_pos']
+        y = df['y_pos']
+        sns.lineplot(x=x, y=y, ax=ax)
+
+    ax.xaxis.set_major_formatter(tk.ScalarFormatter(useMathText=True))
+    ax.yaxis.set_major_formatter(tk.ScalarFormatter(useMathText=True))
+    ax.tick_params(axis='both', which='major', labelsize=8)
+    ax.set_xlabel('X(m)')
+    ax.set_ylabel('Y(m)')
+    # Add arrow and label
+    arrow_props = dict(arrowstyle='->', linewidth=1.5, color='red')
+    plt.annotate('Field direction', xy=(0.6, 1.02), xytext=(0.5, 1.02),
+                 xycoords='axes fraction', textcoords='axes fraction',
+                 ha='right', va='center', arrowprops=arrow_props)
+
+    ax.set_xlim(ax.get_xlim()[::-1])
+
+    # Set a title for the graph
+    ax.set_title('Optional paths for charge movement in electrical field', pad=20)
+    ax.legend(labels, loc='upper right')
+
+    return ax
 
 def generate_evenly_distributed_positions(din, shape, num_electrons, radius=1.0):
     positions = []
