@@ -7,17 +7,21 @@ import charge
 import helper_functions as hf
 import shape
 
+
+# intialize variables
 sphere = shape.Sphere(1, 3, [])
 n = 200
-time_tao = 10**(-3)  # s
-sphere.distribute_charges_3d(n, -e, electron_mass)
+tao = 10**(-3)  # s
+sphere.distribute_charges(n, -e, electron_mass)
 # df = hf.generate_dataframe(sphere.distribution)
-for i in range(1000):
-    for charge in sphere.charges:
-        charge.calculate_electric_field(sphere.charges, [0, 0, 0])
-    for charge in sphere.charges:
-        charge.update_motion(time_tao)
-    sphere.check_charges_in_sphere()
 
-sphere.reset_distribution()
-sphere.project_distribution()
+# run simulation
+for i in range(900):
+    for charge in sphere.charges:
+        charge.calculate_electric_field(sphere.charges)
+    for charge in sphere.charges:
+        charge.update_motion(tao)
+    sphere.return_charges_to_sphere()
+
+sphere.project_distribution_3d()
+sphere.print_charges_inside_volume()

@@ -9,6 +9,8 @@ from mpl_toolkits.mplot3d import Axes3D
 
 
 def generate_random_theta_phi(dim: int):
+    ''' generate a random direction in two or three dimensions.
+    :param dim = number of dimensions in the system'''
     if dim == 2:
         two_pi = 2*math.pi
         theta = random.uniform(0, two_pi)  # Generate random theta between 0 and 2pi
@@ -47,7 +49,12 @@ def cartesian_to_polar(x, y):
     return r, theta
 
 
+
 def get_random_velocity(v: float, dim: int):
+    '''Get a velocity vector of magnitude v and a random direction
+    :param v = magnitude of velocity vector
+    :param dim = dimensions of system'''
+
     if dim == 2:
         theta = generate_random_theta_phi(dim)
         return polar_to_cartesian(v, theta)
