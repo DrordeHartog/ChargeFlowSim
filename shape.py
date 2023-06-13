@@ -125,6 +125,7 @@ class Sphere:
 
     def project_distribution_2d(self):
         """"plots and displays points charges in a 2d circle"""
+        self.recalc_distribution()
         # Plot the shape (e.g., a circle)
         fig, ax = plt.subplots()
         shape = plt.Circle((0, 0), self.radius, color='gray', fill=False)

@@ -41,10 +41,7 @@ class Charge:
          :param charges = list of charges of class Charge
          :param external_field = external electric field, default value 0 """
         k = 8.9875517923 * 10**9  # Coulomb's constant
-        self.efx = external_field[0]
-        self.efy = external_field[1]
-        self.efz = external_field[2]
-
+        self.efx, self.efy, self.efz = external_field
         #  remove our charge from calculations
         if charges[self.index].index == self.index:
             other_charges = charges[:self.index] + charges[self.index+1:]
@@ -79,7 +76,6 @@ class Charge:
 
     def update_position(self, velocity, tao):
         """ Move under effect of drude collision velocity """
-
         self.x += velocity[0] * tao
         self.y += velocity[1] * tao
         self.z += velocity[2] * tao
