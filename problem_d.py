@@ -9,21 +9,21 @@ import shape_mod as shape
 
 
 # intialize variables
-sphere = shape.Sphere(1, 2, [])
+square = shape.Square(1, 2, [])
 n = 200
 tao = 10**(-3)  # s
-sphere.distribute_charges(n, -e, electron_mass)
-time_intervals = 100
+square.distribute_charges(n, -e, electron_mass)
+square.project_distribution_2d()
+time_intervals = 10
 # df = hf.generate_dataframe(sphere.distribution)
 
 # run simulation
 for i in range(time_intervals):
     print(i)
-    for charge in sphere.charges:
-        charge.calculate_electric_field(sphere.charges)
-    for charge in sphere.charges:
+    for charge in square.charges:
+        charge.calculate_electric_field(square.charges)
+    for charge in square.charges:
         charge.update_motion(tao)
-    sphere.return_charges_to_sphere()
+    square.return_charges_to_square()
 
-sphere.project_distribution_2d()
-sphere.calculate_charge_density()
+square.project_distribution_2d()

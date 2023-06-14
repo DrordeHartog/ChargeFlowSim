@@ -1,6 +1,13 @@
 Dror:
-add titles to graph
-make graph 2d in problem A
-make graph pretty
+finish problem d
 
 Noam:
+review new files shape_mod, helper_functions_mod before
+review charge density graph (c)
+add potential graph (b)
+
+Additional:
+Divide work on final document
+clean shape, helper functions files
+(if we have time - try to minimize code duplication)
+

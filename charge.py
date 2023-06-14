@@ -15,6 +15,7 @@ class Charge:
         self.efx = 0
         self.efy = 0
         self.efz = 0
+        self.in_sphere = 1
         self.index = index
 
 # getters and setters
@@ -34,6 +35,16 @@ class Charge:
 
     def set_mass(self, m):
         self.m = m
+
+    def set_in_sphere(self, in_sphere_value):
+        self.in_sphere = in_sphere_value
+
+    def get_in_sphere(self):
+        return self.in_sphere
+
+    def get_radius(self):
+        return math.sqrt(self.x**2+self.y**2+self.z**2)
+
 
     def calculate_electric_field(self, charges: list, external_field=(0, 0, 0)):
         """ Calculate the electric field on a charge from all charges in the
