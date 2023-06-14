@@ -44,7 +44,8 @@ class Square:
             if self.dim == 2:
                 for i in range(min(n - len(charges), len(new_points))):
                     x, y = new_points[i]
-                    z = np.random.uniform(-1, 1)  # Assign random z-coordinate within the cube
+                    # z = np.random.uniform(-1, 1)  # Assign random z-coordinate within the cube
+                    z = 0
                     charges.append(ch.Charge(x, y, z, counter, q, m))
                     counter += 1
                     selected_points.append([x, y, z])
@@ -57,10 +58,10 @@ class Square:
         """ Checks all that all charges are within sphere. if not calls
         charge method to return to sphere"""
         for charge in self.charges:
-            if self.radius < charge.x:
+            if self.radius < math.fabs(charge.x):
                 charge.x = np.sign(charge.x)*self.radius
-            if self.radius < charge.y:
-                charge.x = np.sign(charge.y) * self.radius
+            if self.radius < math.fabs(charge.y):
+                charge.y = np.sign(charge.y) * self.radius
 
     def recalc_distribution(self):
         """" recalculates distribution nparray locations"""

@@ -2,6 +2,7 @@ from scipy.constants import e
 from scipy.constants import electron_mass
 import helper_functions as hf
 import math
+from scipy.special import logsumexp
 
 
 class Charge:
@@ -65,11 +66,18 @@ class Charge:
             dz = self.z - charge.z
 
             r_squared = dx**2 + dy**2 + dz**2
-            r_cubed = r_squared**(3/2)
+            try:
+                r_cubed = r_squared**(3/2)
+            except RuntimeWarning:
+                printf("too small distance")
+                r_cubed = 5e-324
+            try:
+                field_x = k * charge.q * dx / r_cubed
+                field_y = k * charge.q * dy / r_cubed
+                field_z = k * charge.q * dz / r_cubed
+            except RuntimeWarning:
+                #handle singularity
 
-            field_x = k * charge.q * dx / r_cubed
-            field_y = k * charge.q * dy / r_cubed
-            field_z = k * charge.q * dz / r_cubed
 
             self.efx += field_x
             self.efy += field_y

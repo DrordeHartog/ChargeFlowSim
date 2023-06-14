@@ -14,12 +14,12 @@ n = 200
 tao = 10**(-3)  # s
 square.distribute_charges(n, -e, electron_mass)
 square.project_distribution_2d()
-time_intervals = 10
+time_intervals = 100
 # df = hf.generate_dataframe(sphere.distribution)
 
 # run simulation
 for i in range(time_intervals):
-    print(i)
+    # print(i)
     for charge in square.charges:
         charge.calculate_electric_field(square.charges)
     for charge in square.charges:
