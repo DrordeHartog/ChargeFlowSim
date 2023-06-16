@@ -1,14 +1,9 @@
-
-from numpy import linspace, meshgrid
 from scipy.constants import e
 from scipy.constants import electron_mass
-import pandas as pd
-import charge
-import helper_functions as hf
-import shape_mod as shape
+import shape as shape
 
 
-# intialize variables
+# initialize variables
 square = shape.Square(1, 2, [])
 n = 200
 tao = 10**(-3)  # s

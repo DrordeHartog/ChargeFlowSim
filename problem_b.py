@@ -1,31 +1,23 @@
-import pandas as pd
 from scipy.constants import e
 from scipy.constants import electron_mass
-import helper_functions as hf
-import shape_mod as shape
+import shape as shape
 
 
-# intialize variables
+# initialize variables
 sphere = shape.Sphere(1, 3, [])
 n = 200
 tao = 10**(-3)  # s
 sphere.distribute_charges(n, -e, electron_mass)
-df = hf.generate_dataframe(sphere.distribution)
-df['in_sphere'] = 1
-sphere.visualise()
-time_intervals = 900
-# time_intervals = 10
+time_intervals = 1000
 # run simulation
 for i in range(time_intervals):
-    print(i)
     for charge in sphere.charges:
         charge.calculate_electric_field(sphere.charges)
     for charge in sphere.charges:
         charge.update_motion(tao)
     sphere.return_charges_to_sphere()
+    print(sum(charge.in_sphere for charge in sphere.charges))
 
-# sphere.project_distribution_3d()
 sphere.recalc_distribution()
-sphere.visualise()
-# sphere.print_charges_inside_volume()
+sphere.project_distribution_3d()
 sphere.plot_percentage_in_sphere()
