@@ -1,13 +1,13 @@
 from scipy.constants import e, electron_mass
 import pandas as pd
 import charge as ch
-import helper_functions_mod as hf
+import helper_functions as hf
 import seaborn as sns
 import matplotlib.pyplot as plt
 
 c = pd.DataFrame()
 
-#initialize variables
+# initialize variables
 time_tao = 10**(-15)  # s
 time_intervals = 100
 
@@ -18,7 +18,6 @@ charge = ch.Charge(0, 0, 0, 0, -e, electron_mass)
 charges = [charge]
 initial_position = (0, 0, 0)
 
-data = hf.generate_dataframe([initial_position])
 paths = []
 
 

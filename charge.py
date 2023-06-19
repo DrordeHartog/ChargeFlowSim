@@ -45,7 +45,6 @@ class Charge:
     def get_radius(self):
         return math.sqrt(self.x**2+self.y**2+self.z**2)
 
-
     def calculate_electric_field(self, charges: list, external_field=(0, 0, 0)):
         """ Calculate the electric field on a charge from all charges in the
          system and an external electric field..
@@ -93,7 +92,7 @@ class Charge:
 
     def correct_r_to_radius(self, radius, dim):
         """Returns a charge back into a circular shape in the radial direction.
-         this fuction assumes the center of the shape to be (0,0,0).
+         this function assumes the center of the shape to be (0,0,0).
         :param radius = radius of shape
         :param dim = number of dimensions of shape."""
         if dim == 3:
