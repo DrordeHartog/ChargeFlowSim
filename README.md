@@ -1,7 +1,7 @@
 # ChargeFlowSim
 A simulator of charge flow inside a conductor. A part of 77102 - electricity and magnetism course at Huji - spring semsester 2023. 
 
-Written by Computer Science and Physics students Noam Susman and Dror De-Hartug, 
+Written by Computer Science and Physics students Noam Susman and Dror De-Hartog, 
 
 ## project overview
 The following code solves 4 different problems presented that were solved analyticaly using mathematical tools and then were solved numerically with the following code. 
